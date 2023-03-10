@@ -1,59 +1,92 @@
 import { useSelector } from 'react-redux';
-import { useTheme, Avatar, Text } from 'react-native-paper';
-import { View, StyleSheet } from 'react-native';
+import { useRef, useState } from 'react';
+import { useTheme, Button } from 'react-native-paper';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+
+import WelcomeBack from './Slides/WelcomeBack';
+import Activity from './Slides/Activity';
+import Stats from './Slides/Stats';
+import ModalSuccess from '../ModalSuccess';
+import ModalAchievement from '../ModalAchievement';
+
 
 export default () => {
     const theme = useTheme();
+    const [showModal, setShowModal] = useState(false);
+    const [showAchievementModal, setShowAchievementModal] = useState(false);
     const { avatarUrl, name } = useSelector(state => state.account.info);
+    const carouselRef = useRef();
+    const [activeSlide, setActiveSlide] = useState(0);
+
+    const slides = [
+        {
+            render: () => <WelcomeBack />
+        }, 
+        {
+            render: () => <Activity />,
+            dotColor: theme.colors.white,
+            inactiveDotColor: theme.colors.white80,
+            backgroundColor: theme.colors.primary
+        },
+        {
+            render: () => <Stats duration={7} />
+        },
+        {
+            render: () => <Stats duration={30} />
+        }
+    ];
+
+    const renderCarouselItem = ({ item }) => {
+        return (
+            <View style={styles.carouselItemWrapper(theme, item.backgroundColor)}>
+               {item.render()}
+            </View>
+        );
+    }
 
     return <>
-        <View style={styles.wrapper(theme)}>
-            <Avatar.Image size={100} source={{ uri: avatarUrl }} />
-            <View style={styles.info}>
-                <Text variant="titleSmall" style={styles.title}>
-                    <Text>Welcome back </Text>
-                    <Text style={styles.strongText(theme)}>{name}</Text>
-                </Text>
-                {/* <Text variant="bodyMedium" style={styles.lineText}>
-                    <Text>You have reached </Text>
-                    <Text style={styles.strongText(theme)}>{entrances.length}</Text>
-                    <Text> peaks!</Text>
-                </Text>
-                <Text variant="bodyMedium" style={styles.lineText}>
-                    <Text>You have visited </Text>
-                    <Text style={styles.strongText(theme)}>{entrances.length}</Text>
-                    <Text> countries!</Text>
-                </Text>
-                <Text variant="bodyMedium" style={styles.lineText}>
-                    <Text>You have unlocked </Text>
-                    <Text style={styles.strongText(theme)}>{achievements.length}</Text>
-                    <Text> achievements!</Text>
-                </Text> */}
-            </View>
+        <View style={styles.carouselWrapper}>
+            <Carousel
+                ref={carouselRef}
+                data={slides}
+                renderItem={renderCarouselItem}
+                sliderWidth={Dimensions.get('window').width}
+                itemWidth={Dimensions.get('window').width}
+                onSnapToItem={index => setActiveSlide(index)}
+            />
+            <Pagination
+                dotsLength={slides.length}
+                dotStyle={{ backgroundColor: slides[activeSlide].dotColor || theme.colors.black }}
+                inactiveDotStyle={{ backgroundColor: slides[activeSlide].inactiveDotColor || theme.colors.black80 }}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.pagination}
+            />
         </View>
+        {/* <ModalSuccess visible={showModal} onConfirmPress={() => setShowModal(false)} message="Something was done completely successfully" />
+        <ModalAchievement visible={showAchievementModal} onConfirmPress={() => setShowAchievementModal(false)} achievement={{ name: 'Globetrotter', currentLevel: 6 }} />
+        <Button onPress={() => setShowModal(true)}>modal</Button>
+        <Button onPress={() => setShowAchievementModal(true)}>achievment</Button> */}
     </>
 }
 
 const styles = StyleSheet.create({
-    wrapper: theme => ({
-        display: 'flex',
-        flexDirection:'row',
-        flexWrap: 'no-wrap',
-        height: 120,
-        padding: 10,
-        borderBottomWidth: 1,
-        borderColor: theme.colors.lightGray
-    }),
-    info: {
-        flexGrow: 2,
-        paddingLeft: 10
+    carouselWrapper: {
+        position: 'relative'
     },
-    title: { marginBottom: 10 },
-    strongText: theme => ({
-        fontWeight: 'bold',
-        color: theme.colors.primary
+    carouselItemWrapper: (theme, backgroundColor) => ({
+        height: 140,
+        backgroundColor: theme.colors.white,
+        backgroundColor: backgroundColor || theme.colors.white,
+        padding: 10,
+        paddingTop: 15,
+        paddingBottom: 30
     }),
-    lineText: {
-        marginBottom: 2
+    pagination: {
+        paddingBottom: 15,
+        paddingTop: 10,
+        position: 'absolute',
+        bottom: 0,
+        width: '100%'
     }
 })

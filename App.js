@@ -20,7 +20,7 @@ export default () => {
 
     return (
         <Provider store={store}>
-            <PersistGate persistor={persistor}  loading={null}>
+            <PersistGate persistor={persistor} loading={null}>
                 <ThemeProvider>
                     <Wrapper />
                 </ThemeProvider>

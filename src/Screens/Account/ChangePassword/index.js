@@ -11,7 +11,18 @@ import ScrollWrapper from '../../../Components/Account/ScrollWrapper';
 const formSchema = {
     password: schema.password,
     newPassword: { ...schema.password, name: 'newPassword', label: 'New password*' },
-    confirmNewPassword: { ...schema.confirmPassword, name: 'confirNewPassword', label: 'Confirm new password*'  }
+    confirmNewPassword: {
+        ...schema.confirmPassword,
+        name: 'confirmNewPassword',
+        label: 'Confirm new password*',
+        validation: [
+            {
+                name: 'equalTo',
+                message: 'Confirm new password field must the same as new password!',
+                options: { fieldName: 'newPassword' }
+            }
+        ]
+    }
 };
 
 export default () => {
@@ -30,9 +41,9 @@ export default () => {
         }
     }
 
-    const successCallback = () => {
-        form.setIsLoading(false);
-        form.setMessage({ visible: true, level: 'success', text: 'Password succesfully changed!' });
+    const successCallback = message => {
+        form.onApiSuccess(message);
+        form.clearForm();
     }
 
     return <ScrollWrapper isLoading={form.isLoading} formMessage={form.message} setMessage={form.setMessage} withHeader={false}>

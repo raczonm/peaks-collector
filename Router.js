@@ -13,18 +13,19 @@ import HeaderLogo from './src/Components/HeaderLogo';
 import DrawerContent from './src/Components/Drawer';
 
 import Home from './src/Screens/Home';
+import Map from './src/Screens/Map';
+import Search from './src/Screens/Search';
+import Achievements from './src/Screens/Achievements'
 import UpdateAccount from './src/Screens/Account/UpdateAccount';
 import Signup from './src/Screens/Account/Signup';
 import ChangePassword from './src/Screens/Account/ChangePassword';
 import Contact from './src/Screens/Account/Contact';
-import ReportBug from './src/Screens/Account/ReportBug';
 
-// import AddPeak from './src/Screens/AddPeak';
-// import Search from './src/Screens/Search';
-// import PeakDetails from './src/Screens/PeakDetails';
-// import Map from './src/Screens/Map';
+import ActivityWrapper from './src/Screens/Activity/ActivityWrapper';
+
+import AddPeak from './src/Screens/AddPeak';
+import PeakDetails from './src/Screens/PeakDetails';
 // import MyPeaks from './src/Screens/MyPeaks';
-// import Achievements from './src/Screens/Achievements';
 
 
 const tabsNav = [
@@ -34,30 +35,30 @@ const tabsNav = [
         component: Home,
         iconName: 'home'
     },
-    // {
-    //     key: 'achievements',
-    //     name: 'Achievements',
-    //     component: Achievements,
-    //     iconName: 'trophy'
-    // },
+    {
+        key: 'achievements',
+        name: 'Achievements',
+        component: Achievements,
+        iconName: 'trophy'
+    },
     // {
     //     key: 'peaks',
     //     name: 'My Peaks',
     //     component: MyPeaks,
     //     iconName: 'summit'
     // },
-    // {
-    //     key: 'map',
-    //     name: 'Map',
-    //     component: Map,
-    //     iconName: 'map-search'
-    // },
-    // {
-    //     key: 'search',
-    //     name: 'Search',
-    //     component: Search,
-    //     iconName: 'magnify'
-    // },
+    {
+        key: 'map',
+        name: 'Map',
+        component: Map,
+        iconName: 'map-search'
+    },
+    {
+        key: 'search',
+        name: 'Search',
+        component: Search,
+        iconName: 'magnify'
+    },
 ];
 
 
@@ -85,7 +86,7 @@ const TabsWrapper = ({ navigation }) => {
     </View>
 }
 
-const Main = () => {
+const MainWrapper = () => {
     const theme = useTheme();
     const Drawer = createDrawerNavigator();
 
@@ -115,24 +116,22 @@ const Main = () => {
             }
            
             <Drawer.Screen name="Contact" component={Contact} options={{ title: 'Contact / About Us' }}  />
-            <Drawer.Screen name="Report Bug" component={ReportBug} />
         </Drawer.Navigator>
         
     </>;
 };
 
-
-
-
+// ROOT NAVIGATOR
 export default () => {
     const Stack = createNativeStackNavigator();
 
     return <>
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Main" options={{ headerShown: false }} component={Main} />
-                {/* <Stack.Screen name="Add Peak" component={AddPeak} options={{ headerBackTitle: 'cancel' }} />
-                <Stack.Screen name="Peak details" component={PeakDetails} options={{ headerBackTitle: 'back' }} />  */}
+                <Stack.Screen name="Main" options={{ headerShown: false }} component={MainWrapper} />
+                <Stack.Screen name="Activity" options={{ headerShown: false }} component={ActivityWrapper} />
+                <Stack.Screen name="Add Peak" component={AddPeak} options={{ headerBackTitle: 'cancel' }} /> 
+                <Stack.Screen name="Peak Details" component={PeakDetails} options={{ headerBackTitle: 'back' }} />
             </Stack.Navigator>
         </NavigationContainer>
     </>;

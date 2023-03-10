@@ -1,3 +1,4 @@
+import haversine from 'haversine';
 import { Dimensions } from 'react-native';
 
 
@@ -51,10 +52,20 @@ const formatImageObject = imageObject => {
 export const transformFormData = params => {
     let formData = new FormData();
 
-    console.log('params', params);
-
     Object.keys(params).forEach(paramName => {
-        formData.append(paramName, paramName === 'avatar' ? formatImageObject(params[paramName]) : params[paramName]);
+        switch (paramName) {
+            case 'avatar':
+                formData.append(paramName, formatImageObject(params[paramName]));
+                break;
+            case 'assets':
+                params[paramName].forEach(asset => {
+                    formData.append(paramName, formatImageObject(asset));
+                })
+                break;
+            default:
+                formData.append(paramName, params[paramName])
+                break;
+          }
     });
 
     return formData;
@@ -102,4 +113,26 @@ export const formatDate = date => {
     if (day < 10) { day = `0${day}` }
 
     return `${year}-${month}-${day}`;
+}
+
+//GET DURATION
+export const getDuration = (start, end = Date.now()) => {
+    const diff = (end - start) / 1000;
+    const hours = Math.floor(diff / 3600).toString();
+    const minutes = Math.floor((diff % 3600) / 60).toString();
+    const seconds = Math.floor(diff % 60).toString();
+
+    return `${hours.length > 1 ? hours : '0' + hours}:${minutes.length > 1 ? minutes : '0' + minutes}:${seconds.length > 1 ? seconds : '0' + seconds}`;
+}
+
+// GET DISTANCE
+export const getDistance = (locations = []) => {
+    let distance = 0;
+    if (locations.length < 2) return distance.toFixed(2);
+
+    distance = locations.reduce((acc, location, index) => {
+        return index === locations.length - 1 ? acc : acc + haversine(location, locations[index + 1]);
+    }, 0);
+
+    return distance.toFixed(2);
 }

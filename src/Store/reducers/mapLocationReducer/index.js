@@ -20,15 +20,15 @@ export default function(state = initialState, { type, payload }) {
             return { 
                 ...state,
                 defaultMapPosition: { 
-                    latitude: payload.defaultMapPosition[0],
-                    longitude: payload.defaultMapPosition[1]
+                    latitude: payload.account.defaultMapPosition[0],
+                    longitude: payload.account.defaultMapPosition[1]
                 },
             };
         case GET_USER_FOREGROUND_LOCATION_FAILURE:
             return { 
                 ...state,
                 currentUserPosition: null,
-                isCurrentPositionLoaded: false,
+                isCurrentPositionLoaded: true,
                 isForegroundLocationEnabled: false,
                 isForegroundLocationChecked: true
             };

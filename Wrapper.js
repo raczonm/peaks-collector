@@ -8,11 +8,11 @@ import Router from './Router';
 export default () => {
     const dispatch = useDispatch();
 
-    const { isLoggedIn } = useSelector(state => state.account);
+    const { isLoggedIn, token } = useSelector(state => state.account);
 
     useEffect(() => { dispatch(getUserLocationRequest()); }, []);
 
-    if (!isLoggedIn) return <LoginRouter />;
+    if (!isLoggedIn || !token) return <LoginRouter />;
 
     return <Router />;
 }

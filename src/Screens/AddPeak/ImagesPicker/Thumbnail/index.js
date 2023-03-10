@@ -3,7 +3,7 @@ import { StyleSheet, Image, View, Dimensions, TouchableOpacity } from 'react-nat
 
 export default ({ removeImage, setMainImage, image, index, isMainImage }) => {
     const theme = useTheme();
-    const thumbnailWidth = ((Dimensions.get('window').width - 35) / 4);
+    const thumbnailWidth = ((Dimensions.get('window').width - 25) / 4);
 
     const handleRemoveIconPress = () => removeImage(index);
 
@@ -14,7 +14,7 @@ export default ({ removeImage, setMainImage, image, index, isMainImage }) => {
                 <IconButton
                     icon="close"
                     iconColor={theme.colors.white} 
-                    size={12}
+                    size={10}
                     onPress={handleRemoveIconPress}
                     style={styles.removeButton(theme, isMainImage)}
                 />
@@ -29,15 +29,15 @@ const styles = StyleSheet.create({
         width: thumbnailWidth,
         borderWidth: 1,
         borderColor: isMainImage ? theme.colors.primary : theme.colors.lightGray,
-        backgroundColor: isMainImage ? theme.colors.primary : 'transparent',
-        padding: 5,
+        backgroundColor: isMainImage ? theme.colors.primary : theme.colors.white,
+        padding: 3,
         marginBottom: 5,
         marginHorizontal: 2.5,
         boxSizing: 'border-box'
     }),
     thumbnail: thumbnailWidth => ({
-        width: thumbnailWidth - 12,
-        height: thumbnailWidth - 12
+        width: thumbnailWidth - 8,
+        height: (0.66 * thumbnailWidth) - 8
     }),
     removeButton: (theme, isMainImage) => ({
         position: 'absolute',

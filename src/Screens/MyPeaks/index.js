@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useTheme } from 'react-native-paper';
@@ -16,8 +17,8 @@ export default () => {
     const theme = useTheme()
     const MyPeaksTabs = createMaterialTopTabNavigator();
 
-    const { entrances } = useContext(AccountContext);
-    const { peaks } = useContext(PeaksContext)
+    const entrances= useSelector(state => state.entrances);
+    const { peaks } = useContext(state => state.peaks)
     const [uniquePeaks, setUniquePeaks] = useState([]);
     const [peaksWithData, setPeaksWithData] = useState([]);
     const [isReady, setIsReady] = useState(false);

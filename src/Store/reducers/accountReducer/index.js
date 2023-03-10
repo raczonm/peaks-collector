@@ -9,6 +9,7 @@ const initialState = {
 
 const formatData = account => ({
     name: account.name || account.defaultName,
+    email: account.email,
     avatarUrl: account.avatarUrl,
     birthdate: account.birthdate,
     description: account.description,
@@ -22,14 +23,15 @@ export default function(state = initialState, { type, payload }) {
         case UPDATE_ACCOUNT_SUCCESS:
         case CHANGE_PASSWORD_SUCCESS:
         case LOGIN_SUCCESS:
-            console.log('account.reducer', payload);
+            const { account } = payload;
+
             return { 
                 isLoggedIn: true,
-                isPremium: payload.isPremium,
-                isRegistered: payload.isRegistered,
-                id: payload._id,
-                token: payload.token,
-                info: formatData(payload)
+                isPremium: account.isPremium,
+                isRegistered: account.isRegistered,
+                id: account._id,
+                token: account.token,
+                info: formatData(account)
             };
         case LOGOUT_SUCCESS:
             return initialState;

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { EMPTY_MESSAGE } from '../../Config';
 
 export default formSchema => {
-    const [formData, setFormData] = useState(Object.keys(formSchema).reduce((acc, key) => ({ ...acc, [formSchema[key].name]: formSchema[key].initialValue }), {}));
+    const getDefaultFormData = () => Object.keys(formSchema).reduce((acc, key) => ({ ...acc, [formSchema[key].name]: formSchema[key].initialValue }), {});
+    
+    const [formData, setFormData] = useState(getDefaultFormData());
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState(EMPTY_MESSAGE);
 
@@ -19,6 +21,8 @@ export default formSchema => {
         }
     }
 
+    const clearForm = () => setFormData(getDefaultFormData());
+
     const handleFormDataChange = (fieldName, value) => setFormData({ ...formData, [fieldName]: value });
 
     const validateFields = () => {
@@ -34,7 +38,6 @@ export default formSchema => {
 
             if (isFormValid && field.validation) {
                 field.validation.forEach(method => {
-                    console.log('method', method);
                     if (!validationMethods[method.name](formData[field.name], method.options)) {
                         setMessage({ visible: true, level: 'error', text: method.message });
                         isFormValid = false;
@@ -51,6 +54,11 @@ export default formSchema => {
         setIsLoading(false);
     }
 
+    const onApiSuccess = message => {
+        setMessage({ level: 'success', visible: true, text: message || 'Action Completed Successfully' });
+        setIsLoading(false);
+    }
+
     return {
         formData,
         setFormData,
@@ -60,6 +68,8 @@ export default formSchema => {
         setMessage,
         handleFormDataChange,
         validateFields,
-        onApiError
+        onApiError,
+        onApiSuccess,
+        clearForm
     };
 }

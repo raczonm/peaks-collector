@@ -44,12 +44,17 @@ export default ({ onChange }) => {
                 <View style={styles.imagePlaceholder(theme)}>
                     <MaterialCommunityIcons name='image-filter-hdr' color={theme.colors.darkGray} size={200} style={styles.imagePlaceholderIcon} />
                 </View>
-                <View style={styles.thumbnailsWrapper}>
-                    {images[mainImage] && <>
-                        <Image source={{ uri: images[mainImage].uri }} style={styles.mainImage} />
-                        <Text variant="titleSmall" style={styles.mainImageLabel(theme)}>Main image</Text>
-                    </>}
-                </View>
+                {images[mainImage] && <Image source={{ uri: images[mainImage].uri }} style={styles.mainImage} />}
+                {images[mainImage] && <Text variant="titleSmall" style={styles.mainImageLabel(theme)}>Main image</Text>}
+                <Button
+                    mode="contained"
+                    icon="camera"
+                    onPress={pickImage}
+                    style={styles.button(theme, !!images.length)}
+                    textColor={!!images.length ? theme.colors.primary : theme.colors.darkGray}
+                >
+                    {images.length ? 'Change images' : 'Add'}
+                </Button>
             </View>
             <View style={styles.thumbnailsList}>
                 {images.map((image, index) => (
@@ -63,18 +68,15 @@ export default ({ onChange }) => {
                     />
                 ))}
             </View>
-            <Button icon="camera" onPress={pickImage} mode="contained">{images.length ? 'Change images' : 'Add images'}</Button>
+            
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     imagePickerWrapper: theme => ({
-        paddingVertical: 10,
         width: '100%',
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: theme.colors.lightGray
+        backgroundColor: theme.colors.lightGray
     }),
     mainImageWrapper: {
         position: 'relative',
@@ -109,10 +111,21 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 20
     }),
+    button: (theme, isChange) => ({
+        position: 'absolute',
+        bottom: isChange ? 10 : 'auto',
+        top: isChange ? 'auto' : 10, 
+        right: 5,
+        backgroundColor: isChange ? theme.colors.white70 : 'transparent',
+        borderColor: isChange ? theme.colors.primary : theme.colors.darkGray,
+        borderWidth: 1,
+        margin: 0
+
+    }),
     thumbnailsList: {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginHorizontal: -2.5
+        marginHorizontal: 2.5
     }
 });

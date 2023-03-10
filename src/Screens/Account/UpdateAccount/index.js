@@ -29,14 +29,9 @@ export default () => {
             dispatch(updateAccountRequest({
                 params: form.formData,
                 errorCallback: form.onApiError,
-                successCallback
+                successCallback: form.onApiSuccess
             }));
         }
-    }
-
-    const successCallback = () => {
-        form.setIsLoading(false);
-        form.setMessage({ visible: true, level: 'success', text: 'Profile succesfully updated!' })
     }
 
     return <ScrollWrapper isLoading={form.isLoading} formMessage={form.message} setMessage={form.setMessage} withHeader={false}>

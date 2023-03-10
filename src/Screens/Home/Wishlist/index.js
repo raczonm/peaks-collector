@@ -1,28 +1,36 @@
-import { useContext, useEffect, useState } from 'react';
-import { FlatList, Text } from 'react-native';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FlatList, StyleSheet } from 'react-native';
 
-import AccountContext from '../../../Context/AccountContext';
-import PeaksContext from '../../../Context/PeaksContext';
-import WishlistPeakCard from '../../../Components/WishlistPeakCard';
+import PeakCard from '../../../Components/PeakCard';
+import PeakCardLoader from '../../../Components/PeakCard/PeakCardLoader';
+import { getPeaksByIdsRequest } from '../../../Store/actions';
 
 export default ({ navigation }) => {
-    const { wishlist } = useContext(AccountContext);
-    const { peaks } = useContext(PeaksContext)
-    const [latestPeaks, setLatestPeaks] = useState()
-
-    const handleOnPress = peakId => navigation.navigate('Peak details', { peakId});
+    const dispatch = useDispatch();
+    const wishlist = useSelector(state => state.wishlist);
+    const { peaks } = useSelector(state => state.peaks);
 
     useEffect(() => {
-        setLatestPeaks(wishlist.map(peakId => {
-            return { ...peaks[peakId] } || { id: userPeak.peakId };
-        }));
-    }, [peaks, wishlist]);
+        dispatch(getPeaksByIdsRequest(wishlist.map(peakId => ({ peakId }))));
+    }, [wishlist]);
 
-    if (!wishlist || !peaks) return null;
+    console.log(wishlist);
 
-    return <FlatList
-        renderItem={({ item }) => item.name ? <WishlistPeakCard onPress={() => handleOnPress(item.id)} peak={item} /> : <Text>Loading</Text>}
-        keyExtractor={item => item.activityId}
-        data={latestPeaks}
-    />;
-}
+    if (!wishlist.length) return null;
+
+    return (
+        <FlatList
+            renderItem={({ item }) => item.name ? <PeakCard peak={item} /> : <PeakCardLoader />}
+            keyExtractor={item => item.id}
+            data={wishlist.map(peakId => peaks[peakId])}
+            contentContainerStyle={styles.wrapper}
+        />
+    );
+};
+
+const styles = StyleSheet.create({
+    wrapper: {
+        padding: 5
+    }
+});

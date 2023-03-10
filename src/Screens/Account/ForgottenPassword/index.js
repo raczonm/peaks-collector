@@ -21,14 +21,9 @@ export default () => {
             dispatch(forgottenPasswordRequest({
                 params: form.formData,
                 errorCallback: form.onApiError,
-                successCallback
+                successCallback: form.onApiSuccess,
             }));
         }
-    }
-
-    const successCallback = () => {
-        form.setIsLoading(false);
-        form.setMessage({ visible: true, level: 'success', text: 'New password send to Your email address! We strongly recommend to change Your password imediately after you login to Our app.' });
     }
 
     return <ScrollWrapper isLoading={form.isLoading} formMessage={form.message} setMessage={form.setMessage} withHeader={false}>

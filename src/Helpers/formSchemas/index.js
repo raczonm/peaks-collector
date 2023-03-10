@@ -68,7 +68,7 @@ export default {
         name: 'acceptNewsletter',
         label: 'Accept Newsletter',
         isRequired: false,
-        initialValue: '',
+        initialValue: false,
         icon: 'newspaper-variant-outline',
         type: 'switch',
         description: 'Please allow us to send You update info from time to time.'
@@ -110,40 +110,49 @@ export default {
             isMultiline: true 
         }
     },
-    resetPasswordCode: {
-        name: 'resetPasswordCode',
-        label: 'Reset Passord Code',
+    dateVisited: {
+        name: 'dateVisited',
+        label: 'Visited date',
         isRequired: true,
-        initialValue: '',
-        icon: 'information-outline',
-        options: {
-            placeholder: "Type code received in email"
-        },
-        validation: [
-            {
-                name: 'minLength',
-                message: 'Code needs to have at least 4 characters',
-                options: { length: '4' }
-            }
-        ]
+        initialValue: null,
+        icon: 'calendar',
+        options: {}
     },
-    bugScreenShot: {
-        label: 'Screen shot',
+    peakComment: {
+        name: 'peakComment',
+        label: 'Comment',
         isRequired: false,
         initialValue: '',
-        icon: 'image',
+        icon: 'comment',
         options: {
-            placeholder: "Attach bug screen shot if possible"
+            isMultiline: true, placeholder: 'Share Your insights about this peak' 
         }
     },
-    bugDescription: {
-        label: 'Bug description',
-        isRequired: true,
-        initialValue: '',
-        icon: 'information-outline',
-        options: {
-            placeholder: "Please provide bug description and how to reproduce",
-            isMultiline: true 
-        }
+    isPublic: {
+        name: 'isPublic',
+        label: 'Public',
+        isRequired: false,
+        initialValue: false,
+        icon: 'eye',
+        type: 'switch',
+        description: 'Images addod to public entrances will be visible to other users.'
+    },
+    rating: {
+        name: 'rating',
+        label: 'Rating',
+        isRequired: false,
+        initialValue: 0,
+        icon: 'star',
+        type: 'rating',
+        description: 'Your overall impression about the peak, trail quality, landscapes and nature.'
+    },
+    difficulty: {
+        name: 'difficulty',
+        label: 'Difficulty',
+        isRequired: false,
+        initialValue: 0,
+        icon: 'speedometer-medium',
+        type: 'rating',
+        description: 'Your overall impression about the peak, trail quality, landscapes and nature.'
     }
 };

@@ -6,7 +6,7 @@ import ModalSpinner from '../../ModalSpinner';
 import FormMessage from '../../FormMessage';
 import { EMPTY_MESSAGE } from '../../../Config';
 
-export default ({ children, isLoading, formMessage, setMessage, withHeader = true }) => {
+export default ({ children, isLoading, formMessage, setMessage, withInnerPadding = true, withHeader = true }) => {
     const theme = useTheme();
 
     return <KeyboardAvoidingView style={{flex: 1}} behavior="padding" enabled>
@@ -14,7 +14,7 @@ export default ({ children, isLoading, formMessage, setMessage, withHeader = tru
             <ModalSpinner visible={isLoading} label="Loading..." />
             {withHeader && <Header />}
             <FormMessage {...formMessage} onPress={() => setMessage(EMPTY_MESSAGE)} />
-            <View style={styles.innerWrapper(theme)}>
+            <View style={styles.innerWrapper(theme, withInnerPadding)}>
                 {children}
             </View>
         </ScrollView>
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     scrollWrapper: theme => ({
         backgroundColor: theme.colors.white
     }),
-    innerWrapper: theme => ({
-        padding: 20,
+    innerWrapper: (theme, withInnerPadding) => ({
+        padding: withInnerPadding ? 20 : 0,
         backgroundColor: theme.colors.white
     })
 })

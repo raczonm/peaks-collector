@@ -24,7 +24,7 @@ export default ({ navigation }) => {
 
     const handleLoginSkip = () => {
         form.setIsLoading(true);
-        dispatch(createAccountRequest({ params: {}, errorCallback: form.onApiError }));
+        dispatch(createAccountRequest({ params: { isFastSignup: true }, errorCallback: form.onApiError }));
     }
 
     const handleLoginPress = () => {

@@ -1,14 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FlatList } from 'react-native';
 
-import AccountContext from '../../../Context/AccountContext';
-import PeaksContext from '../../../Context/PeaksContext';
 import VisitedPeakCard from '../../../Components/VisitedPeakCard';
-import PeakCardLoader from '../../../Components/PeakCardLoader';
+import PeakCardLoader from '../../../Components/PeakCard/PeakCardLoader';
 
 export default () => {
-    const { entrances } = useContext(AccountContext);
-    const { peaks } = useContext(PeaksContext)
+    const { entrances } = useSelector(state => state.entrances);
+    const { peaks } = useSelector(state => state.peaks);
     const [latestPeaks, setLatestPeaks] = useState()
 
     useEffect(() => {

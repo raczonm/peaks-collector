@@ -13,6 +13,7 @@ const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
     stateReconciler: autoMergeLevel2,
+    blacklist: ['mainMap', 'search']
 }
 
 const sagaMiddleware = createSagaMiddleware();

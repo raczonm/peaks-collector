@@ -91,7 +91,6 @@ export default () => {
         >
             <Drawer.Screen name="Tabs" component={TabsWrapper} options={{ title: 'Home', headerShown: false }} />
             {/* <Drawer.Screen name="Settings" component={() => <Text>Settings</Text>} />
-            <Drawer.Screen name="Report Bug" component={() => <Text>Report bug</Text>} />
             <Drawer.Screen name="Contact Us" component={() => <Text>Report bug</Text>} /> */}
         </Drawer.Navigator>
         

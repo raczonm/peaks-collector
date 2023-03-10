@@ -10,21 +10,23 @@ const theme = {
   },
   colors: {
     ...DefaultTheme.colors,
+    primary: '#0c91c9',
+    primary80: 'rgba(12, 144, 201,0.8)',
     white: '#ffffff',
+    white10: 'rgba(255, 255, 255, 0.1)',
+    white50: 'rgba(255, 255, 255, 0.5)',
+    white70: 'rgba(255, 255, 255, 0.7)',
     white80: 'rgba(255, 255, 255, 0.8)',
+    white90: 'rgba(255, 255, 255, 0.90)',
     white95: 'rgba(255, 255, 255, 0.95)',
     black: '#000000',
     black50: 'rgba(0, 0, 0, 0.5)',
+    black80: 'rgba(0, 0, 0, 0.8)',
     lightGray: '#dddddd',
     darkGray: '#999999',
-    primary: '#0c91c9',
-    secondary: '#f1c40f',
-    tertiary: '#a1b2c3',
     success: '#2f7532',
     wishlist: '#de551f',
     achievements: {
-      star: '#ffd200',
-      ribbon: '#ca021e',
       levels: ['#d8d8d8', '#402009', '#414141', '#9f490b', '#afaeae', '#de9700', '#03a69c']
     }
   },

@@ -1,7 +1,6 @@
-import { useContext } from 'react';
-import { FlatList, Text } from 'react-native';
 
-import AccountContext from '../../Context/AccountContext';
+import { FlatList } from 'react-native';
+
 import Achievement from './Achievement';
 
 const AchievementsList = [
@@ -9,7 +8,6 @@ const AchievementsList = [
         id: 0,
         name: 'Peaks Collector',
         info: 'Badge granted for total amount of different peaks you have visited, collect new peaks to achieve next levels!',
-        notStartedDescription: 'You have not visited any peaks yet, visit #firstLevelRequirement to achieve bronze level',
         inProgressDescription: 'You have visited #currentCount peaks, visit #countDifference more peaks to achieve next level',
         completedDescription: 'You have visited $count peaks, impresive!',
         baseImageUrl: 'imageurl', // for 0 level
@@ -22,7 +20,6 @@ const AchievementsList = [
         id: 1,
         name: 'Globetrotter',
         info: 'Badge granted for total amount of different peaks you have visited, collect new peaks to achieve next levels!',
-        notStartedDescription: 'You have not visited any peaks yet, visit #firstLevelRequirement to achieve bronze level',
         inProgressDescription: 'You have visited #currentCount peaks, visit #countDifference more peaks to achieve next level',
         completedDescription: 'You have visited $count peaks, impresive!',
         baseImageUrl: 'imageurl', // for 0 level
@@ -36,7 +33,6 @@ const AchievementsList = [
         id: 2,
         name: 'Reporter',
         info: 'Badge granted for total amount of different peaks you have visited, collect new peaks to achieve next levels!',
-        notStartedDescription: 'You have not visited any peaks yet, visit #firstLevelRequirement to achieve bronze level',
         inProgressDescription: 'You have visited #currentCount peaks, visit #countDifference more peaks to achieve next level',
         completedDescription: 'You have visited $count peaks, impresive!',
         baseImageUrl: 'imageurl', // for 0 level
@@ -49,7 +45,6 @@ const AchievementsList = [
         id: 3,
         name: 'Birthday Climber man',
         info: 'Badge granted for total amount of different peaks you have visited, collect new peaks to achieve next levels!',
-        notStartedDescription: 'You have not visited any peaks yet, visit #firstLevelRequirement to achieve bronze level',
         inProgressDescription: 'You have visited #currentCount peaks, visit #countDifference more peaks to achieve next level',
         completedDescription: 'You have visited $count peaks, impresive!',
         baseImageUrl: 'imageurl', // for 0 level
@@ -62,7 +57,6 @@ const AchievementsList = [
         id: 4,
         name: 'Lipsum',
         info: 'Badge granted for total amount of different peaks you have visited, collect new peaks to achieve next levels!',
-        notStartedDescription: 'You have not visited any peaks yet, visit #firstLevelRequirement to achieve bronze level',
         inProgressDescription: 'You have visited #currentCount peaks, visit #countDifference more peaks to achieve next level',
         completedDescription: 'You have visited $count peaks, impresive!',
         baseImageUrl: 'imageurl', // for 0 level
@@ -180,8 +174,6 @@ const userAchievemets = [
 
 
 export default () => {
-    // const { achievements } = useContext(AccountContext);
-
     const calculatedAchievements = AchievementsList.reduce((acc, achievement) => {
         return [
             ...acc,
@@ -195,7 +187,6 @@ export default () => {
     }, []);
 
     return <FlatList
-        numColumns={3}
         renderItem={({ item }) => <Achievement {...item} />}
         keyExtractor={item => item.id}
         data={calculatedAchievements}

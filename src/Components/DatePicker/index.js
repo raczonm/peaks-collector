@@ -10,7 +10,7 @@ export default ({ onChange, label, initialValue, withBottomBorder = true, icon, 
     const theme = useTheme();
 
     const [datePickerOpen, setDatePickerOpen] = useState(false);
-    const [date, setDate] = useState(new Date(initialValue));
+    const [date, setDate] = useState(initialValue ? new Date(initialValue) : new Date());
 
     const handleDismiss = () => setDatePickerOpen(false);
     

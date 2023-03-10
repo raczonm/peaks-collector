@@ -1,91 +1,81 @@
-import { useContext, useState } from 'react';
-import { useTheme } from 'react-native-paper';
-import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
+import { useTheme, Button } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 
-import AccountContext from '../../Context/AccountContext';
-import FormMessage from '../../Components/FormMessage';
-import ModalSpinner from '../../Components/ModalSpinner';
+import ScrollWrapper from '../../Components/Account/ScrollWrapper';
 import MainPeakInfo from '../../Components/MainPeakInfo';
-import SaveButton from '../../Components/SaveButton';
 import FormField from '../../Components/FormField';
 import ImagesPicker from './ImagesPicker';
 import DatePicker from '../../Components/DatePicker';
-import { formatDate } from '../../Helpers';
+import schema from '../../Helpers/formSchemas';
+import useForm from '../../Helpers/useForm';
+import { addEntranceRequest } from '../../Store/actions';
 
-const ERROR_MESSAGE = 'Sorry, something went wrong with saving this peak!';
+const formSchema = {
+    dateVisited: schema.dateVisited,
+    isPublic: schema.isPublic,
+    peakComment: schema.peakComment,
+    mainAssetIndex: { name: 'mainAssetIndex', initialValue: 0, isRequired: false },
+    assets: { name: 'assets', initialValue: [] },
+    rating: schema.rating,
+    difficulty: schema.difficulty,
+};
 
 export default ({ navigation, route }) => {
     const { peak } = route.params;
+
     const theme = useTheme();
-    const account = useContext(AccountContext);
+    const dispatch = useDispatch();
+    const form = useForm(formSchema);
 
-    const [message, setMessage] = useState({ visible: false, level: 'neutral', text: '' })
-    const [isSaving, setIsSaving] = useState(false);
-    const [isPublic, setIsPublic] = useState(true);
-    const [imagesData, setImagesData] = useState({ images: [], mainImage: 0 });
-    const [date, setDate] = useState(new Date());
-    const [description, setDescription] = useState('');
-
-    const handleImageChange = data => setImagesData(data);
-    const handleDateChange = data => setDate(data);
-    const handleDescriptionChange = value => setDescription(value);
-
-    const errorCallback = () => {
-        setIsSaving(false);
-        setMessage({
-            level: 'error',
-            visible: true,
-            text: ERROR_MESSAGE
-        })
+    const handleImageChange = ({ mainImage, images }) => {
+        form.handleFormDataChange('mainAssetIndex', mainImage);
+        form.handleFormDataChange('assets', images);
     }
-
-    const handleBannerOkPress = () => setMessage({ visible: false, level: 'neutral', text: '' })
 
     const handleSave = () => {
-        setIsSaving(true);
+        if (form.validateFields()) {
+            form.setIsLoading(true);
+            dispatch(addEntranceRequest({ params: form.formData }));
+        }
 
-        account.addPeak({
-            params: {
-                peakId: peak.id,
-                mainAssetIndex: imagesData.mainImage,
-                conquerDate: formatDate(date),
-                description,
-                isPublic,
-                rating: 4,
-                difficulty: 4
-            },
-            assets: imagesData.images,
-            successCallback: () => navigation.navigate('Home'),
-            errorCallback: () => errorCallback()
-        });
+        // account.addPeak({
+        //     params: {
+        //         peakId: peak.id,
+        //         mainAssetIndex: imagesData.mainImage,
+        //         conquerDate: formatDate(date),
+        //         description,
+        //         isPublic,
+        //         rating: 4,
+        //         difficulty: 4
+        //     },
+        //     assets: imagesData.images,
+        //     successCallback: () => navigation.navigate('Home'),
+        //     errorCallback: () => errorCallback()
+        // });
     }
 
-    return <ScrollView style={styles.formWrapper(theme)}>
-        <FormMessage {...message} onPress={handleBannerOkPress}/>
-        <ModalSpinner visible={isSaving} label="Saving..." />
-        <View style={styles.innerWrapper}>
-            <MainPeakInfo peak={peak} />
-            <DatePicker onChange={handleDateChange} initialDate={new Date()} label="Visited date" />
+    return (
+        <ScrollWrapper isLoading={form.isLoading} formMessage={form.message} setMessage={form.setMessage} withHeader={false} withInnerPadding={false}>
             <ImagesPicker onChange={handleImageChange} />
-            <FormField label="Comment" onChange={handleDescriptionChange} options={{ isMultiline: true, placeholder: 'Share Your insights about this peak' }} />
-            <SaveButton onPress={handleSave} text="Save Peak" />
-            <View style={{ height: 320 }} />
-        </View>
-    </ScrollView>;
+            <View style={styles.innerWrapper}>
+                <MainPeakInfo peak={peak} />
+                <DatePicker {...formSchema.dateVisited} form={form} />
+                <FormField {...formSchema.peakComment} form={form} />
+                <FormField {...formSchema.rating} form={form} />
+                <FormField {...formSchema.difficulty} form={form} />
+                <FormField {...formSchema.isPublic} form={form} />
+                <Button icon="content-save" marginTop={20} mode="contained" onPress={handleSave}>Save entrance</Button>
+            </View>
+        </ScrollWrapper>
+    );
 }
 
 
 const styles = StyleSheet.create({
-    formWrapper: theme => ({
-        height: Dimensions.get('window').height - 120,
-        backgroundColor: theme.colors.white
-    }),
     innerWrapper: {
-        padding: 10
-    },
-    saveButton: theme => ({
-        backgroundColor: theme.colors.success,
-        paddingVertical: 10,
-        marginTop: 20
-    })
+        padding: 10,
+        paddingTop: 0,
+        paddingBottom: 20
+    }
 });

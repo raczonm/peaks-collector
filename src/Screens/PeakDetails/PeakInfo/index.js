@@ -3,8 +3,6 @@ import { Button, ActivityIndicator, useTheme } from 'react-native-paper';
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
 import haversine from 'haversine';
 
-import AccountContext from '../../../Context/AccountContext';
-import PeaksContext from '../../../Context/PeaksContext';
 import MainPeakInfo from '../../../Components/MainPeakInfo';
 import Rating from '../../../Components/Rating';
 import EntryImage from '../../../Components/Gallery/EntryImage';
@@ -13,14 +11,8 @@ import { BASE_ASSETS_URL } from '../../../Config';
 
 export default ({ navigation, peak }) => {
     const theme = useTheme();
-    const { currentUserPosition } = useContext(AccountContext);
-    const [distance, setDistance] = useState(null)
 
     const handleAddPeak = () => navigation.navigate('Add Peak', { peak });
-
-    useEffect(() => {
-        currentUserPosition && setDistance(haversine(currentUserPosition, peak.coordinate));
-    }, [currentUserPosition]);
 
     console.log('peakDetails', peak);
 
@@ -30,7 +22,7 @@ export default ({ navigation, peak }) => {
             <MainPeakInfo peak={peak} padding={10} />
             <Rating isEditable={false} />
             <View style={styles.peakInfoWrapper}>
-                {distance && <Text>Distance: {distance}km</Text>}
+                {/* {distance && <Text>Distance: {distance}km</Text>} */}
                 <Text>AAAAnd other peak details to be added basing on peak data</Text>
             </View>
         </ScrollView>

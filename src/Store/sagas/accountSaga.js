@@ -16,103 +16,85 @@ import {
     loginSuccess
 } from '../actions';
 
+const GENERAL_API_ERROR_MESSAGE = 'GENERAL_API_ERROR_MESSAGE';
+
+function* handleApiCall({ endpoint, successAction, successCallback, errorCallback, params, isMultipart = true }) {
+    try {
+        const _params = isMultipart ? transformFormData(params) : params;
+        const _settings = isMultipart ? MULTIPART_SETTINGS : {};
+
+        const response = yield call(accountApi.post, endpoint, _params, _settings);
+        const { data, success, userMessage, log } = response.data;
+
+        console.log(response.data);
+
+        if (success) {
+            yield successAction && put(successAction(data));
+            yield successCallback && successCallback(userMessage);
+        } else {
+            yield errorCallback && errorCallback(userMessage);
+        }
+    } catch(error) {
+        console.log('END ERROR', error)
+        yield errorCallback && errorCallback(GENERAL_API_ERROR_MESSAGE);
+    }
+}
+
 function* createAccount({ payload }) {    
-    try {
-        const response = yield call(accountApi.post, '/create', transformFormData(payload.params), MULTIPART_SETTINGS);
-        const { data, success, message } = response.data;
+    yield handleApiCall({
+        ...payload,
+        endpoint: '/create',
+        successAction: createAccountSuccess,
+    });
+}
 
-        if (success) {
-            yield put(createAccountSuccess(data.account));
-            yield payload.successCallback && payload.successCallback();
-        } else {
-            yield payload.errorCallback && payload.errorCallback();
-        }
+function* updateAccount({ payload }) {
+    const { id, token } = yield select(state => state.account);
 
-    } catch(error) {
-        payload.errorCallback && payload.errorCallback();
-    }
-};
-
-function* updateAccount({ payload }) {    
-    try {
-        const { id, token } = yield select(state => state.account);
-        const response = yield call(accountApi.post, '/edit', transformFormData({ ...payload.params, token, accountId: id }), MULTIPART_SETTINGS);
-        const { data, success, message } = response.data;
-
-        if (success) {
-            yield put(updateAccountSuccess(data.account));
-            yield payload.successCallback && payload.successCallback();
-        } else {
-            yield payload.errorCallback && payload.errorCallback();
-        }
-
-    } catch(error) {
-        payload.errorCallback && payload.errorCallback();
-    }
-};
+    yield handleApiCall({
+        ...payload,
+        endpoint: '/edit',
+        successAction: updateAccountSuccess,
+        params: { ...payload.params, token, accountId: id }
+    });
+}
 
 function* changePassword({ payload }) {    
-    try {
-        const { id, token } = yield select(state => state.account);
-        const response = yield call(accountApi.post, '/change-password', transformFormData({ ...payload.params, token, accountId: id }), MULTIPART_SETTINGS);
-        const { data, success, message } = response.data;
+    const { id, token } = yield select(state => state.account);
 
-        if (success) {
-            yield put(changePasswordSuccess(data.account));
-            yield payload.successCallback && payload.successCallback();
-        } else {
-            yield payload.errorCallback && payload.errorCallback();
-        }
-
-    } catch(error) {
-        payload.errorCallback && payload.errorCallback();
-    }
+    yield handleApiCall({
+        ...payload,
+        endpoint: '/change-password',
+        successAction: changePasswordSuccess,
+        params: { ...payload.params, token, accountId: id }
+    });
 };
 
 function* forgottenPassword({ payload }) {    
-    try {
-        const { id, token } = yield select(state => state.account);
-        const response = yield call(accountApi.post, '/forgotten-password', transformFormData({ ...payload.params, token, accountId: id }), MULTIPART_SETTINGS);
-        const { data, success, message } = response.data;
-
-        if (success) {
-            yield payload.successCallback && payload.successCallback();
-        } else {
-            yield payload.errorCallback && payload.errorCallback();
-        }
-
-    } catch(error) {
-        payload.errorCallback && payload.errorCallback();
-    }
+    yield handleApiCall({
+        ...payload,
+        endpoint: '/forgotten-password'
+    });
 };
 
-
 function* login({ payload }) {    
-    try {
-        const response = yield call(accountApi.post, '/login', transformFormData(payload.params), MULTIPART_SETTINGS);
-        const { data, success, message } = response.data;
-
-        if (success) {
-            yield put(loginSuccess(data.account));
-            yield payload.successCallback && payload.successCallback();
-        } else {
-            yield payload.errorCallback && payload.errorCallback();
-        }
-    } catch(error) {
-        payload.errorCallback && payload.errorCallback();
-    }
+    yield handleApiCall({
+        ...payload,
+        endpoint: '/login',
+        successAction: loginSuccess
+    });
 };
 
 
 function* logout() {
     const { id, token } = yield select(state => state.account);
-    try {
-        yield call(accountApi.post, '/logout', { token, accountId: id });
-        yield put(logoutSuccess());
 
-    } catch(error) {
-        console.log(error);
-    }
+    yield handleApiCall({
+        endpoint: '/logout',
+        params: { token, accountId: id },
+        successAction: logoutSuccess,
+        isMultipart: false
+    });
 }
 
 function* actionsSaga() {
